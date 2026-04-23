@@ -1,0 +1,71 @@
+name: app_poder_judicial
+description: "App de notificadores judiciales — digitalización, seguimiento y entrega de documentos."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # State management
+  flutter_riverpod: ^3.0.0
+  riverpod_annotation: ^4.0.0
+
+  # Navigation
+  go_router: ^14.6.2
+
+  # HTTP
+  dio: ^5.7.0
+
+  # Models / codegen
+  freezed_annotation: ^3.0.0
+  json_annotation: ^4.9.0
+
+  # Local storage
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  shared_preferences: ^2.3.3
+  path_provider: ^2.1.5
+
+  # Media capture
+  camera: ^0.11.0+2
+  image_picker: ^1.1.2
+  qr_code_scanner: ^1.0.1
+
+  # PDF + share + print
+  pdf: ^3.11.1
+  printing: ^5.13.4
+  share_plus: ^10.1.2
+
+  # Signature
+  signature: ^5.5.0
+
+  # Permissions
+  permission_handler: ^11.3.1
+
+  # Offline sync
+  connectivity_plus: ^6.1.4
+  workmanager: ^0.9.0
+  geolocator: ^13.0.1
+
+  # Utils
+  intl: 0.20.2
+  uuid: ^4.5.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.13
+  riverpod_generator: ^4.0.0
+  freezed: ^3.0.0
+  json_serializable: ^6.8.0
+
+flutter:
+  uses-material-design: true
