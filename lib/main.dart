@@ -8,8 +8,6 @@ import 'features/sync/data/sync_queue_repository.dart';
 
 const _syncTaskName = 'sync_queue';
 
-/// Callback que corre en un isolate separado (background).
-/// No puede usar Riverpod; accede directamente al repositorio.
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, _) async {

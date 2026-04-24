@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -178,7 +177,7 @@ class _NoteCreateFromBarcodeScreenState
           );
 
       if (mounted) {
-        context.goNamed('note-detail', pathParameters: {'id': note.id});
+        Navigator.of(context).pop(note.id);
       }
     } catch (e) {
       if (mounted) {

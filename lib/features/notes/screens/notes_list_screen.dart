@@ -28,11 +28,14 @@ class _NotesListScreenState extends ConsumerState<NotesListScreen> {
   Future<void> _openScanner() async {
     final value = await scanBarcode(context);
     if (value == null || !mounted) return;
-    await Navigator.of(context).push(
+    final noteId = await Navigator.of(context).push<String>(
       MaterialPageRoute(
         builder: (_) => NoteCreateFromBarcodeScreen(barcodeValue: value),
       ),
     );
+    if (noteId != null && mounted) {
+      context.goNamed('note-detail', pathParameters: {'id': noteId});
+    }
   }
 
   @override

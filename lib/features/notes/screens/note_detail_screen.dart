@@ -270,7 +270,7 @@ class _ShareButton extends StatelessWidget {
 // Action bar
 // ---------------------------------------------------------------------------
 
-class _ActionBar extends ConsumerWidget {
+class _ActionBar extends ConsumerStatefulWidget {
   const _ActionBar({
     required this.noteId,
     required this.status,
@@ -284,22 +284,46 @@ class _ActionBar extends ConsumerWidget {
   final VoidCallback onStatusChanged;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final noteAsync = ref.watch(noteByIdProvider(noteId));
+  ConsumerState<_ActionBar> createState() => _ActionBarState();
+}
+
+class _ActionBarState extends ConsumerState<_ActionBar> {
+  bool _loading = false;
+
+  Future<void> _setStatus(Note note, NoteStatus newStatus) async {
+    if (_loading) return;
+    setState(() => _loading = true);
+    try {
+      await ref
+          .read(noteControllerProvider.notifier)
+          .changeStatus(note, newStatus);
+      if (mounted) widget.onStatusChanged();
+    } catch (e) {
+      if (mounted) {
+        setState(() => _loading = false);
+        AppSnackBar.error(context, 'Error: $e');
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final noteAsync = ref.watch(noteByIdProvider(widget.noteId));
     final note = noteAsync.asData?.value;
     if (note == null) return const SizedBox.shrink();
 
-    if (!PermissionGuard.canChangeNoteStatus(user, status, NoteStatus.entregado)) {
+    if (!PermissionGuard.canChangeNoteStatus(
+        widget.user, widget.status, NoteStatus.entregado)) {
       return const SizedBox.shrink();
     }
 
-    Future<void> setStatus(NoteStatus newStatus) async {
-      try {
-        await ref.read(noteControllerProvider.notifier).changeStatus(note, newStatus);
-        onStatusChanged();
-      } catch (e) {
-        if (context.mounted) AppSnackBar.error(context, 'Error: $e');
-      }
+    if (_loading) {
+      return const SafeArea(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(16, 4, 16, 12),
+          child: Center(child: CircularProgressIndicator()),
+        ),
+      );
     }
 
     return SafeArea(
@@ -374,8 +398,8 @@ class _ActionBar extends ConsumerWidget {
                     label: 'Entregado',
                     icon: Icons.check_circle_outline,
                     color: AppColors.statusDelivered,
-                    selected: status == NoteStatus.entregado,
-                    onTap: () => setStatus(NoteStatus.entregado),
+                    selected: widget.status == NoteStatus.entregado,
+                    onTap: () => _setStatus(note, NoteStatus.entregado),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -384,8 +408,8 @@ class _ActionBar extends ConsumerWidget {
                     label: 'Fijado',
                     icon: Icons.push_pin_outlined,
                     color: AppColors.statusNotDelivered,
-                    selected: status == NoteStatus.fijado,
-                    onTap: () => setStatus(NoteStatus.fijado),
+                    selected: widget.status == NoteStatus.fijado,
+                    onTap: () => _setStatus(note, NoteStatus.fijado),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -394,8 +418,8 @@ class _ActionBar extends ConsumerWidget {
                     label: 'Informado',
                     icon: Icons.info_outline,
                     color: AppColors.statusRejected,
-                    selected: status == NoteStatus.informado,
-                    onTap: () => setStatus(NoteStatus.informado),
+                    selected: widget.status == NoteStatus.informado,
+                    onTap: () => _setStatus(note, NoteStatus.informado),
                   ),
                 ),
               ],

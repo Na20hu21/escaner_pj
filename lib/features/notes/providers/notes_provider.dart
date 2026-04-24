@@ -171,7 +171,6 @@ class NoteController extends _$NoteController {
 
     await ref.read(noteRepositoryProvider).save(updated);
     ref.invalidate(notesProvider);
-    ref.invalidate(noteByIdProvider(note.id));
   }
 
 
